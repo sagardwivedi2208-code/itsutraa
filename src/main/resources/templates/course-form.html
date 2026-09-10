@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Course Form | IT SUTRAA</title><link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+<div class="admin-wrap">
+  <div class="admin-top"><div><span class="eyebrow">IT SUTRAA ADMIN</span><h1 th:text="${course.id != null ? 'Edit Course' : 'Add New Course'}"></h1></div><a class="admin-btn secondary" href="/admin/dashboard">Dashboard</a></div>
+  <div class="admin-card form-card">
+    <div th:if="${error}" class="alert error" th:text="${error}"></div>
+    <form th:action="@{/admin/courses/save}" th:object="${course}" method="post" enctype="multipart/form-data">
+      <input type="hidden" th:field="*{id}">
+      <div class="form-grid">
+        <label>Course Title<input type="text" th:field="*{title}" placeholder="e.g. Core Java" required></label>
+        <label>Special Price (₹)<input type="number" min="0" th:field="*{price}" required></label>
+        <label>Original Price (₹)<input type="number" min="0" th:field="*{originalPrice}" placeholder="e.g. 999"></label>
+        <label>Current Image URL<input type="text" th:field="*{imageUrl}" placeholder="/images/java.jpg or /uploads/..." ></label>
+      </div>
+      <label>Description<textarea th:field="*{description}" rows="6" placeholder="Course details, outcomes and learning content" required></textarea></label>
+      <label>Upload New Course Photo<input type="file" name="imageFile" accept="image/png,image/jpeg,image/webp"></label>
+      <p class="hint">Upload a photo from your computer, or keep the existing image URL. Uploaded images are stored in the project's <b>uploads</b> folder.</p>
+      <button class="admin-btn" type="submit">💾 Save Course</button>
+    </form>
+  </div>
+</div>
+</body></html>

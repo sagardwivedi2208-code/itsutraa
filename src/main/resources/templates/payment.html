@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Secure Payment | IT SUTRAA</title>
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+
+<main class="pay-page">
+
+    <div class="pay-card">
+
+        <div class="brand center">
+            <img th:src="@{/images/logo.png}" alt="IT SUTRAA">
+            <span>IT SUTRAA</span>
+        </div>
+
+        <span class="eyebrow">
+            SECURE CHECKOUT • TEST MODE
+        </span>
+
+        <h1 th:text="${course.title}">
+            Course Name
+        </h1>
+
+        <div class="pay-amount">
+            ₹<span th:text="${course.price}">0</span>
+        </div>
+
+        <p>
+            Test payment only — no real money is charged.
+            Complete payment to unlock this course in your student dashboard.
+        </p>
+
+        <button class="btn full" id="payBtn">
+            Pay Now
+        </button>
+
+        <a href="/courses" class="back">
+            ← Back to courses
+        </a>
+
+    </div>
+
+</main>
+
+
+<script th:inline="javascript">
+
+    /* Get values safely from Thymeleaf */
+
+    const razorpayKey = /*[[${keyId}]]*/ '';
+
+    const courseId = /*[[${course.id}]]*/ 0;
+
+    const coursePrice = /*[[${course.price}]]*/ 0;
+
+    const courseTitle = /*[[${course.title}]]*/ '';
+
+    const orderId = /*[[${orderId}]]*/ '';
+
+
+    /* Razorpay Checkout */
+
+    const options = {
+
+        key: razorpayKey,
+
+        amount: coursePrice * 100,
+
+        currency: 'INR',
+
+        name: 'IT SUTRAA',
+
+        description: courseTitle,
+
+        order_id: orderId,
+
+        handler: function (response) {
+
+            const form = document.createElement('form');
+
+            form.method = 'POST';
+
+            form.action = '/payment/verify';
+
+
+            /* Course ID */
+
+            const courseInput = document.createElement('input');
+
+            courseInput.type = 'hidden';
+
+            courseInput.name = 'courseId';
+
+            courseInput.value = courseId;
+
+            form.appendChild(courseInput);
+
+
+            /* Razorpay Order ID */
+
+            const orderInput = document.createElement('input');
+
+            orderInput.type = 'hidden';
+
+            orderInput.name = 'razorpay_order_id';
+
+            orderInput.value = response.razorpay_order_id;
+
+            form.appendChild(orderInput);
+
+
+            /* Razorpay Payment ID */
+
+            const paymentInput = document.createElement('input');
+
+            paymentInput.type = 'hidden';
+
+            paymentInput.name = 'razorpay_payment_id';
+
+            paymentInput.value = response.razorpay_payment_id;
+
+            form.appendChild(paymentInput);
+
+
+            /* Razorpay Signature */
+
+            const signatureInput = document.createElement('input');
+
+            signatureInput.type = 'hidden';
+
+            signatureInput.name = 'razorpay_signature';
+
+            signatureInput.value = response.razorpay_signature;
+
+            form.appendChild(signatureInput);
+
+
+            document.body.appendChild(form);
+
+            form.submit();
+
+        },
+
+
+        theme: {
+            color: '#6d4aff'
+        }
+
+    };
+
+
+    /* Pay Now button */
+
+    document.getElementById('payBtn').addEventListener('click', function () {
+
+        if (!razorpayKey || !orderId) {
+
+            alert('Razorpay configuration is missing.');
+
+            return;
+
+        }
+
+        const razorpay = new Razorpay(options);
+
+        razorpay.open();
+
+    });
+
+</script>
+
+</body>
+
+</html>

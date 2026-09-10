@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Dashboard | IT SUTRAA</title><link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+<div class="admin-wrap">
+  <div class="admin-top">
+    <div><span class="eyebrow">IT SUTRAA</span><h1>Admin Dashboard</h1><p class="muted">Monitor students, courses, payments and your learning business.</p></div>
+    <a class="admin-btn secondary" href="/logout">Logout</a>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card"><span>Students</span><strong th:text="${studentCount}">0</strong><small>Registered users</small></div>
+    <div class="stat-card"><span>Courses</span><strong th:text="${courseCount}">0</strong><small>Live course catalog</small></div>
+    <div class="stat-card"><span>Internships</span><strong th:text="${internshipCount}">0</strong><small>Programs available</small></div>
+    <div class="stat-card"><span>Paid Orders</span><strong th:text="${paidCount}">0</strong><small>Successful payments</small></div>
+  </div>
+  <div class="admin-nav"><a class="admin-btn" href="/admin/courses">📘 Manage Courses</a><a class="admin-btn" href="/admin/internships">💼 Manage Internships</a><a class="admin-btn" href="/admin/students">👨‍🎓 Manage Students</a><a class="admin-btn" href="/admin/dashboard#payments">💳 Payments</a></div>
+  <div class="admin-grid-2">
+    <section class="admin-card"><h2>How are students finding IT SUTRAA?</h2><div th:if="${sources.isEmpty()}" class="muted">No student data yet.</div><div class="source-row" th:each="entry : ${sources}"><span th:text="${entry.key}">Website</span><b th:text="${entry.value}">0</b></div></section>
+    <section class="admin-card"><h2>Quick Actions</h2><div class="quick-actions"><a href="/admin/courses/new">➕ Add Course</a><a href="/admin/internships/new">➕ Add Internship</a><a href="/admin/students">👥 View Students</a><a href="/courses">🌐 View Website</a></div></section>
+  </div>
+  <section class="admin-card"><h2>Recent Enrollments</h2><div class="table-scroll"><table><thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Status</th><th>Payment ID</th></tr></thead><tbody><tr th:each="e : ${enrollments}"><td th:text="${e.student.name}"></td><td th:text="${e.student.email}"></td><td th:text="${e.course.title}"></td><td><span class="badge" th:text="${e.paymentStatus ? 'PAID' : 'PENDING'}"></span></td><td th:text="${e.paymentId}"></td></tr><tr th:if="${enrollments.isEmpty()}"><td colspan="5" class="muted">No enrollments yet.</td></tr></tbody></table></div></section>
+  <section class="admin-card" id="payments"><h2>Payment Activity</h2><div class="table-scroll"><table><thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Amount</th><th>Status</th><th>Payment</th></tr></thead><tbody><tr th:each="p : ${payments}"><td th:text="${p.createdAt}"></td><td th:text="${p.student.name}"></td><td th:text="${p.course.title}"></td><td>₹<span th:text="${p.amount}"></span></td><td th:text="${p.status}"></td><td th:text="${p.razorpayPaymentId}"></td></tr><tr th:if="${payments.isEmpty()}"><td colspan="6" class="muted">No payment records yet.</td></tr></tbody></table></div></section>
+</div>
+</body></html>

@@ -1,0 +1,3 @@
+package in.sd.backend.controller;
+import in.sd.backend.repository.CourseRepository; import in.sd.backend.repository.InternshipRepository; import org.springframework.beans.factory.annotation.Autowired; import org.springframework.stereotype.Controller; import org.springframework.ui.Model; import org.springframework.web.bind.annotation.GetMapping;
+@Controller public class HomeController { @Autowired private CourseRepository courseRepo; @Autowired private InternshipRepository internshipRepo; @GetMapping("/") public String home(Model m){m.addAttribute("courses",courseRepo.findAll().stream().filter(c->!"Summer Internship".equalsIgnoreCase(c.getTitle())).toList());m.addAttribute("internships",internshipRepo.findAll());return "home";} }
