@@ -10,4 +10,4 @@ FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/target/itsutraa-1.0.jar app.jar
 EXPOSE 8080
-ENTRYPOINT java -Dspring.datasource.url=$SPRING_DATASOURCE_URL -Dspring.datasource.username=$SPRING_DATASOURCE_USERNAME -Dspring.datasource.password=$SPRING_DATASOURCE_PASSWORD -jar app.jar
+ENTRYPOINT ["java", "-Dspring.datasource.url= jdbc:mysql://mysql-1efb2c37-itsutraa.h.aivencloud.com:21217/defaultdb?sslMode=REQUIRED, "-Dspring.datasource.username=avnadmin", "-Dspring.datasource.password=AVNS_vqZrXMQcGXXDvAwsZKE", "-jar", "app.jar"]
