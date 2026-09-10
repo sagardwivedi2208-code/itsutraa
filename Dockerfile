@@ -1,7 +1,12 @@
+# Step 1: Build the application using Maven
+FROM eclipse-temurin:17-jdk AS build
+WORKDIR /app
+COPY . .
+RUN ./mvnw clean package -DskipTests
+
+# Step 2: Run the application
 FROM eclipse-temurin:17-jre
 WORKDIR /app
-COPY target/itsutraa-1.0.jar app.jar
-RUN mkdir -p /app/uploads
+COPY --from=build /app/target/itsutraa-1.0.jar app.jar
 EXPOSE 8080
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC"
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
